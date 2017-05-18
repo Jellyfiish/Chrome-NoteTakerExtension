@@ -57,7 +57,7 @@ function commitChanges (changes) {
   })
 }
 
-//Load event listner for Scroll Button
+//Load event listener for Scroll Button
 function scroll() {
   $('#next').on('click', function(){
     chrome.tabs.executeScript({
@@ -109,7 +109,6 @@ function button() {
         data: JSON.stringify(note),
         success: (data) => {
           console.log('SUCCESS!');
-          console.log(note);
           getUsers();
         },
         error: (data) => {
@@ -153,7 +152,8 @@ function renderOption(data) {
     if(data.length !== 0) {
       data[0].urls.forEach(function(url) {
         if(url.name === tab.url) {
-          url.pins.forEach(function(note, index) {
+          url.pins.forEach(function(noteObj, index) {
+            var note = JSON.parse(noteObj).note;
             $dropdown.append($("<option/>", {
               label: `Pin ${index + 1}: ${note.slice(0, 15)}...`,
               value: index,
