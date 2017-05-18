@@ -20,6 +20,11 @@
 					<div class="container2">
 						<p>Highlight text and Note it</p>
 						<button class="btn btn-success" id="button">NOTED</button>
+						<form action="" class="select-color">
+						  <input type="radio" name="color" value="yellow" checked><label for="yellow"> yellow</label>
+						  <input type="radio" name="color" value="green"><label for="green"> green</label>
+						  <input type="radio" name="color" value="red"><label for="red"> red</label>
+						</form>
 						<p>Scroll through highlighted notes</p>
 						<button class="btn" id="next">Scroll to Note</button>
 						<hr>
@@ -51,8 +56,8 @@
 			<p class="caption">Press the Log In button above to log in.</p>
 		</div>
 	</div>
-	<script src="../../env.js"></script> 
-	<script src="./browser_action.js"></script> 
+	<script src="../../env.js"></script>
+	<script src="./browser_action.js"></script>
 	<script src="../../node_modules/jwt-decode/build/jwt-decode.js"></script>
 </body>
 </html>
