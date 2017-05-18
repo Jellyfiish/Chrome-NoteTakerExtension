@@ -1,3 +1,11 @@
-.highlight{
+.highlight-yellow {
   background-color: yellow;
+}
+
+.highlight-green {
+  background-color: green;
+}
+
+.highlight-red {
+  background-color: red;
 }
