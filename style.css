@@ -102,3 +102,8 @@ p {
 .penguin{
   height: 30px;
 }
+
+.select-color {
+  font-size: 12px;
+  margin-top: 5px;
+}
