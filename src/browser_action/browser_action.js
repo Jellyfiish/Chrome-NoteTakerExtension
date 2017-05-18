@@ -81,7 +81,7 @@ function getUsers () {
   });
 };
 
-//Load event listner for "Noted" button
+//Load event listener for "Noted" button
 function button() {
   $("#button").on("click", function(){
     var currentUri;
@@ -91,13 +91,16 @@ function button() {
       currentUri = tab.url;
     });
 
+    //Get selected highlight color
+    var highlightColor = $("input[name=color]:checked").val();
+
     //Get hightlighted text from browser
     chrome.tabs.executeScript({
       code: "window.getSelection().toString();"
     }, (selection) => {
 
       var text = selection[0];
-      var note = {name: user, uri: currentUri, note: text};
+      var note = {name: user, uri: currentUri, note: text, color: highlightColor};
 
       $.ajax({
         type: 'POST',
@@ -106,6 +109,7 @@ function button() {
         data: JSON.stringify(note),
         success: (data) => {
           console.log('SUCCESS!');
+          console.log(note);
           getUsers();
         },
         error: (data) => {
