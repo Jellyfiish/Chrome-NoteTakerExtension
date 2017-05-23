@@ -33,7 +33,8 @@ function selectLabel(value) {
       if (element.text) {
         var text = element.text;
         var color = element.getAttribute('color');
-        changes.textToHighlight.push({note: text, color: color});
+        var range = $(element).data('range');
+        changes.textToHighlight.push({note: text, color: color, range: range});
       }
     });
   } //If selecting anything, but --select--
@@ -41,7 +42,8 @@ function selectLabel(value) {
     var $currentOption = $('#dropdown option[value=' + value + ']');
     var text = $currentOption.text();
     var color = $currentOption[0].attributes[2].value;
-    changes.textToHighlight.push({note: text, color: color});
+    var range = $currentOption.data('range');
+    changes.textToHighlight.push({note: text, color: color, range: range});
   }
 
   //Send object of text to highlight
@@ -109,10 +111,29 @@ function highlightSelectedText(highlightColor) {
 
     //Get hightlighted text from browser
     chrome.tabs.executeScript({
-      code: "window.getSelection().toString();"
+      // code: "window.getSelection().toString();"
+      // code: 'window.getSelection().getRangeAt(0);range.toString();range.startContainer.data;range.endContainer.data;range.startOffset;range.endendOffset;'
+      code: `JSON.stringify({
+        text: window.getSelection().getRangeAt(0).toString(),
+        startContainer: window.getSelection().getRangeAt(0).startContainer.data,
+        endContainer: window.getSelection().getRangeAt(0).endContainer.data,
+        startOffset: window.getSelection().getRangeAt(0).startOffset,
+        endOffset: window.getSelection().getRangeAt(0).endOffset
+      });`
     }, (selection) => {
-      var text = selection[0];
-      var note = {user_id: userID, uri: currentUri, note: text, color: highlightColor};
+      var range = JSON.parse(selection);
+      var note = {
+        user_id: userID,
+        uri: currentUri,
+        note: range.text,
+        color: highlightColor,
+        range: {
+          startContainer: range.startContainer,
+          endContainer: range.endContainer,
+          startOffset: range.startOffset,
+          endOffset: range.endOffset
+        }
+      };
 
       $.ajax({
         type: 'POST',
@@ -176,8 +197,8 @@ function renderOption(data) {
               label: `Pin ${index + 1}: ${noteObj.text.slice(0, 15)}...`,
               value: index,
               text: noteObj.text,
-              color: noteObj.color,
-            }));
+              color: noteObj.color
+            }).data({range: JSON.stringify(noteObj.range)}));
           });
         }
       });
